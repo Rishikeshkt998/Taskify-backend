@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const generateToken = (_id, id) => {
+const generateToken = (id) => {
     if (!process.env.JWT_SECRET_KEY) {
         throw new Error("JWT_SECRET is not defined in environment variables");
     }

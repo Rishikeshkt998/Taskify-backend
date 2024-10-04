@@ -60,7 +60,7 @@ const registerUser = async (req: Request, res: Response) => {
             phone: user.phone,
             role: user.role,
             isAdmin: user.isAdmin,  
-            token: generateToken(user._id, user.role),
+            token: generateToken(user._id),
             success: true,
         });
     } else {
@@ -80,7 +80,7 @@ const authUser = async (req: Request, res: Response) => {
       email: user.email,
       role: user.role,
       isAdmin:user.isAdmin,
-      token: generateToken(user._id, user.role),
+      token: generateToken(user._id),
       success: true,
     });
   } else {

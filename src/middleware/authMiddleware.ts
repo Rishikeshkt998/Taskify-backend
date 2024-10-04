@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 import User from "../models/auth/userModel"
 import asyncHandler from 'express-async-handler';
+dotenv.config()
 declare global {
     namespace Express {
         interface Request {
@@ -18,7 +20,11 @@ const protect = asyncHandler(async (req: Request, res: Response, next: NextFunct
         try {
             token = req.headers.authorization.split(' ')[1];
             console.log(token, 'hiii');
-            const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string };
+            console.log("hiiii",process.env.JWT_SECRET_KEY)
+            // const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY as string) as { id: string };
+            // req.user = await User.findById(decoded.id).select('-password');
+            const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY as string) as { id: string };
+            console.log('Decoded ID:', decoded); 
             req.user = await User.findById(decoded.id).select('-password');
 
             next();

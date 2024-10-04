@@ -14,8 +14,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.protect = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const dotenv_1 = __importDefault(require("dotenv"));
 const userModel_1 = __importDefault(require("../models/auth/userModel"));
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
+dotenv_1.default.config();
 const protect = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let token;
     if (req.headers.authorization &&
@@ -23,7 +25,11 @@ const protect = (0, express_async_handler_1.default)((req, res, next) => __await
         try {
             token = req.headers.authorization.split(' ')[1];
             console.log(token, 'hiii');
-            const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
+            console.log("hiiii", process.env.JWT_SECRET_KEY);
+            // const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY as string) as { id: string };
+            // req.user = await User.findById(decoded.id).select('-password');
+            const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET_KEY);
+            console.log('Decoded ID:', decoded);
             req.user = yield userModel_1.default.findById(decoded.id).select('-password');
             next();
         }

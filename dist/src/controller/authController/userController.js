@@ -68,7 +68,7 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             phone: user.phone,
             role: user.role,
             isAdmin: user.isAdmin,
-            token: (0, generateToken_1.default)(user._id, user.role),
+            token: (0, generateToken_1.default)(user._id),
             success: true,
         });
     }
@@ -88,7 +88,7 @@ const authUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             email: user.email,
             role: user.role,
             isAdmin: user.isAdmin,
-            token: (0, generateToken_1.default)(user._id, user.role),
+            token: (0, generateToken_1.default)(user._id),
             success: true,
         });
     }
