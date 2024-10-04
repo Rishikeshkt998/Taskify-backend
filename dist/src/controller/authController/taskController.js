@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTasksForTeamMember = exports.deleteTask = exports.getTasksExcludingManagerId = exports.getTasksByManagerId = exports.addTaskAssign = exports.updateTask = exports.addTask = void 0;
+exports.updateTaskForUser = exports.getTasksForTeamMember = exports.deleteTask = exports.getTasksExcludingManagerId = exports.getTasksByManagerId = exports.addTaskAssign = exports.updateTask = exports.addTask = void 0;
 const taskModel_1 = __importDefault(require("../../models/auth/taskModel"));
 const addTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, mangerid, date, stage, priority } = req.body;
@@ -57,12 +57,11 @@ const addTaskAssign = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.addTaskAssign = addTaskAssign;
 const updateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id, title, mangerid, date, stage, priority } = req.body;
+    const { id, title, date, stage, priority } = req.body;
     console.log("valuess", req.body);
     try {
         const updatedTask = yield taskModel_1.default.findByIdAndUpdate(id, {
             title,
-            mangerid,
             date,
             stage,
             priority,
@@ -80,6 +79,30 @@ const updateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.updateTask = updateTask;
+const updateTaskForUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id, title, date, team, stage, priority } = req.body;
+    console.log("valuess", req.body);
+    try {
+        const updatedTask = yield taskModel_1.default.findByIdAndUpdate(id, {
+            title,
+            date,
+            team,
+            stage,
+            priority,
+        }, { new: true, runValidators: true });
+        if (!updatedTask) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+        res.json({
+            success: true,
+            task: updatedTask,
+        });
+    }
+    catch (error) {
+        res.status(400).json({ message: 'Error updating task', error });
+    }
+});
+exports.updateTaskForUser = updateTaskForUser;
 const getTasksByManagerId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const managerid = req.params.managerid;
     try {
@@ -159,7 +182,7 @@ exports.deleteTask = deleteTask;
 const getTasksForTeamMember = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     try {
-        const tasks = yield taskModel_1.default.find({ team: { $in: [id] } });
+        const tasks = yield taskModel_1.default.find({ team: { $in: [id] } }).populate("team").exec();
         if (!tasks || tasks.length === 0) {
             return res.status(404).json({
                 success: false,

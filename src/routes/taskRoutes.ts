@@ -1,9 +1,10 @@
 import express, { Request, Response, NextFunction } from 'express';
-import { addTask,addTaskAssign,deleteTask,getTasksByManagerId,getTasksExcludingManagerId,getTasksForTeamMember,updateTask } from '../controller/authController/taskController';
+import { addTask,addTaskAssign,deleteTask,getTasksByManagerId,getTasksExcludingManagerId,getTasksForTeamMember,updateTask, updateTaskForUser } from '../controller/authController/taskController';
+import { protect } from '../middleware/authMiddleware';
 
 const router = express.Router();
 
-router.post('/', (req: Request, res: Response, next: NextFunction) => {
+router.post('/',(req: Request, res: Response, next: NextFunction) => {
     addTask(req, res);
 });
 router.post('/assign', (req: Request, res: Response, next: NextFunction) => {
@@ -12,6 +13,9 @@ router.post('/assign', (req: Request, res: Response, next: NextFunction) => {
 
 router.put('/edit', (req: Request, res: Response, next: NextFunction) => {
     updateTask(req, res);
+});
+router.put('/edituser', (req: Request, res: Response, next: NextFunction) => {
+    updateTaskForUser(req, res);
 });
 router.get('/gettask/:managerid', (req: Request, res: Response, next: NextFunction) => {
     getTasksByManagerId(req, res);

@@ -47,7 +47,7 @@ const addTaskAssign = async (req: Request, res: Response) => {
 };
 const updateTask = async (req: Request, res: Response) => {
      
-    const {  id,title, mangerid, date, stage, priority } = req.body;
+    const {  id,title, date, stage, priority } = req.body;
     console.log("valuess",req.body)
 
     try {
@@ -55,12 +55,43 @@ const updateTask = async (req: Request, res: Response) => {
             id,
             {
                 title,
-                mangerid,
                 date,
                 stage,
                 priority,
             },
             { new: true, runValidators: true } 
+        );
+
+        if (!updatedTask) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+
+        res.json({
+            success: true,
+            task: updatedTask,
+        });
+    } catch (error) {
+        res.status(400).json({ message: 'Error updating task', error });
+    }
+};
+
+
+const updateTaskForUser = async (req: Request, res: Response) => {
+
+    const { id, title, date,team, stage, priority } = req.body;
+    console.log("valuess", req.body)
+
+    try {
+        const updatedTask = await Task.findByIdAndUpdate(
+            id,
+            {
+                title,
+                date,
+                team,
+                stage,
+                priority,
+            },
+            { new: true, runValidators: true }
         );
 
         if (!updatedTask) {
@@ -160,7 +191,7 @@ const getTasksForTeamMember = async (req: Request, res: Response) => {
 
     try {
 
-        const tasks = await Task.find({ team: { $in: [id] } });
+        const tasks = await Task.find({ team: { $in: [id] } }).populate("team").exec();
 
         if (!tasks || tasks.length === 0) {
             return res.status(404).json({
@@ -184,4 +215,4 @@ const getTasksForTeamMember = async (req: Request, res: Response) => {
 
 
 
-export { addTask, updateTask, addTaskAssign, getTasksByManagerId, getTasksExcludingManagerId,deleteTask,getTasksForTeamMember };
+export { addTask, updateTask, addTaskAssign, getTasksByManagerId, getTasksExcludingManagerId, deleteTask, getTasksForTeamMember, updateTaskForUser };

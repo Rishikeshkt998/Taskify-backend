@@ -15,6 +15,9 @@ router.post('/assign', (req, res, next) => {
 router.put('/edit', (req, res, next) => {
     (0, taskController_1.updateTask)(req, res);
 });
+router.put('/edituser', (req, res, next) => {
+    (0, taskController_1.updateTaskForUser)(req, res);
+});
 router.get('/gettask/:managerid', (req, res, next) => {
     (0, taskController_1.getTasksByManagerId)(req, res);
 });
