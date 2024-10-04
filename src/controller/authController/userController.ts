@@ -92,7 +92,7 @@ const authUser = async (req: Request, res: Response) => {
 
 const getUsers = async (req: Request, res: Response) => {
     try {
-        const users = await User.find({}); 
+        const users = await User.find({ isAdmin: false }); 
         console.log(users)
 
         if (users.length === 0) {

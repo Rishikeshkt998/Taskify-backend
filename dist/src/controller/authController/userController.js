@@ -100,7 +100,7 @@ const authUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.authUser = authUser;
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const users = yield userModel_1.default.find({});
+        const users = yield userModel_1.default.find({ isAdmin: false });
         console.log(users);
         if (users.length === 0) {
             return res.status(404).json({ message: 'No users found' });
